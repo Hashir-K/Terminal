@@ -10,13 +10,24 @@
       background: #309898;
       color: #FF9F00;
       font-family: monospace;
-      padding: 1rem;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
     }
 
-    #terminal {
-      white-space: pre-wrap;
+    #terminal-container {
+      flex: 1.8;
+      padding: 1rem;
       overflow-y: auto;
-      height: 95vh;
+      white-space: pre-wrap;
+    }
+
+    #ascii-art {
+      flex: 1.2;
+      padding: 1rem;
+      overflow-y: auto;
+      color: #FF9F00;
+      white-space: pre;
     }
 
     .input-line {
@@ -48,21 +59,65 @@
   </style>
 </head>
 <body>
-  <div id="terminal"></div>
+  <div id="terminal-container">
+    <div id="terminal"></div>
+  </div>
+
+  <div id="ascii-art">
+<pre>
+                                      @@@@@ 
+                           %%##*************##%%  
+              @%@@     %##*****##****#***********#% 
+             @#*****##********#**-:=*#**********#%@ 
+             @#***#********###***=:=*#*******#%  
+              ###**********++******#*#*****#% 
+             %#*********+.   .:*************##% 
+             %*-=******=.      =***************#  
+             %*..*****+    .   :*****************% 
+             #+..****+    .*+  :******************#
+             @+..##*=.    -=#  =*******************@ 
+              +..#=       +@# :*************=. .#**# 
+              @:.=:       :%:.************=.  :+###%@ 
+             @#=%@#+=::.....--::::=*+==**+..:#@ 
+              @@#+-::::::::::::=-:=* .-.   :**#   
+                 +:::::::::::--:::*+..--: .-**## 
+                  @=-:::::::::::=*+ .:=.:..:+**#
+                 %##=:==*=---**=#** .:-.   .=**# 
+              @=:::==-:::::::=-:=*---..:.-.:#**# 
+              #::-%#-:::::::::=::+. ::...+-  @#% 
+               +:-#=::::::::::+-::-...:-#%  
+              =:*:.:::::::::::**--+%%#**## 
+              =..  .-::::::::****#     %%%  
+               @:  .:+==::=+***###   
+              %.:...  .-#***##*#**% 
+               =.:....=+%**# #**@@%*% 
+                #.=+++--=**=+#**@ 
+                  @*+:. =**#***#@    
+                 @**=.  +%#*#%%- :+  
+                 #**=. .:...    .*  
+                 #*+==:-:::      .=   
+                 =.  :*+:.:**#*++*# 
+                 +=******. :+******@ 
+               %*********+ .=******# 
+             %************- :******# 
+             ##********###+:-*#%% 
+</pre>
+  </div>
+
   <script>
     const terminal = document.getElementById("terminal");
     const prompt = "hashir@portfolio:~$";
     const commands = {
       help: `Available commands: about, skills, projects, social, clear`,
       about: `Hi, I'm Hashir — a .NET developer passionate about building scalable web APIs and backend systems and exploring my more creative side through novel front-end solutions.
-                I love tackling new technologies and challenges as I make my own journey through the digital world.`,
+I love tackling new technologies and challenges as I make my own journey through the digital world.`,
       skills: `C#, ASP.NET Core, Entity Framework, SQL, Azure, Git`,
       projects: `1. E-Commerce API (.NET 8 + EF Core)
-                2. Microservice Sample App (gRPC, RabbitMQ)
-                3. Clean Architecture Template` ,
+2. Microservice Sample App (gRPC, RabbitMQ)
+3. Clean Architecture Template`,
       social: `GitHub: https://github.com/Hashir-K
-                LinkedIn: https://www.linkedin.com/in/hashir-k-0a75261b7
-                Medium: https://medium.com/@hashirkhanps`,
+LinkedIn: https://www.linkedin.com/in/hashir-k-0a75261b7
+Medium: https://medium.com/@hashirkhanps`,
       clear: "__clear__"
     };
 
@@ -98,18 +153,34 @@
       terminal.scrollTop = terminal.scrollHeight;
     }
 
-    
+    function typeLine(text = "", callback, delay = 20) {
+  let i = 0;
+  const line = document.createElement("div");
+  terminal.appendChild(line);
+
+  function type() {
+    if (i < text.length) {
+      line.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, delay);
+    } else if (callback) {
+      callback();
+    }
+  }
+
+  type();
+}
 
     function handleCommand(cmd) {
-      appendLine();
+      typeLine();
       if (commands[cmd]) {
         if (commands[cmd] === "__clear__") {
           terminal.innerHTML = "";
         } else {
-          appendLine(commands[cmd]);
+          typeLine(commands[cmd]);
         }
       } else {
-        appendLine(`Command not found: ${cmd}`);
+        typeLine(`Command not found: ${cmd}`);
       }
       newPrompt();
     }
@@ -123,10 +194,9 @@
 ||__|  |__| /__/     \\__\\ |_______/    |__|  |__| |__| | _| \`._____|   |__|\\__\\ |__|  |__| /__/     \\__\\ |__| \\__||
 '-----------------------------------------------------------------------------------------------------------------'\n`);
 
-    appendLine("Welcome to Hashir's Terminal Portfolio");
-    appendLine("Type 'help' to see available commands.\n");
+    typeLine("Welcome to Hashir's Terminal Portfolio");
+    typeLine("Type 'help' to see available commands.\n");
     newPrompt();
   </script>
 </body>
 </html>
-
