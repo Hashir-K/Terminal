@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      background: #309898;
+      color: #FF9F00;
+      font-family: monospace;
+      padding: 1rem;
+    }
+
+    #terminal {
+      white-space: pre-wrap;
+      overflow-y: auto;
+      height: 95vh;
+    }
+
+    .input-line {
+      display: flex;
+    }
+
+    .prompt {
+      margin-right: 0.5rem;
+    }
+
+    .blinking-cursor {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    input {
+      background: transparent;
+      border: none;
+      color: #F4631E;
+      font: inherit;
+      outline: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script>
+    const terminal = document.getElementById("terminal");
+    const prompt = "hashir@portfolio:~$";
+    const commands = {
+      help: `Available commands: about, skills, projects, social, clear`,
+      about: `Hi, I'm Hashir — a .NET developer passionate about building scalable web APIs and backend systems and exploring my more creative side through novel front-end solutions.
+                I love tackling new technologies and challenges as I make my own journey through the digital world.`,
+      skills: `C#, ASP.NET Core, Entity Framework, SQL, Azure, Git`,
+      projects: `1. E-Commerce API (.NET 8 + EF Core)
+                2. Microservice Sample App (gRPC, RabbitMQ)
+                3. Clean Architecture Template` ,
+      social: `GitHub: https://github.com/Hashir-K
+                LinkedIn: https://www.linkedin.com/in/hashir-k-0a75261b7
+                Medium: https://medium.com/@hashirkhanps`,
+      clear: "__clear__"
+    };
+
+    function appendLine(text = "") {
+      const line = document.createElement("div");
+      line.textContent = text;
+      terminal.appendChild(line);
+    }
+
+    function newPrompt() {
+      const inputLine = document.createElement("div");
+      inputLine.classList.add("input-line");
+
+      const label = document.createElement("span");
+      label.textContent = prompt;
+      label.classList.add("prompt");
+
+      const input = document.createElement("input");
+      input.autofocus = true;
+      inputLine.appendChild(label);
+      inputLine.appendChild(input);
+      terminal.appendChild(inputLine);
+
+      input.focus();
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const value = input.value.trim();
+          input.disabled = true;
+          handleCommand(value);
+        }
+      });
+
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    
+
+    function handleCommand(cmd) {
+      appendLine();
+      if (commands[cmd]) {
+        if (commands[cmd] === "__clear__") {
+          terminal.innerHTML = "";
+        } else {
+          appendLine(commands[cmd]);
+        }
+      } else {
+        appendLine(`Command not found: ${cmd}`);
+      }
+      newPrompt();
+    }
+
+    appendLine(`.-----------------------------------------------------------------------------------------------------------------.
+| __    __       ___           _______. __    __   __  .______          __  ___  __    __       ___      .__   __.|
+||  |  |  |     /   \\         /       ||  |  |  | |  | |   _  \\        |  |/  / |  |  |  |     /   \\     |  \\ |  ||
+||  |__|  |    /  ^  \\       |   (----\`|  |__|  | |  | |  |_)  |       |  '  /  |  |__|  |    /  ^  \\    |   \\|  ||
+||   __   |   /  /_\\  \\       \\   \\    |   __   | |  | |      /        |    <   |   __   |   /  /_\\  \\   |  . \`  ||
+||  |  |  |  /  _____  \\  .----)   |   |  |  |  | |  | |  |\\  \\----.   |  .  \\  |  |  |  |  /  _____  \\  |  |\\   ||
+||__|  |__| /__/     \\__\\ |_______/    |__|  |__| |__| | _| \`._____|   |__|\\__\\ |__|  |__| /__/     \\__\\ |__| \\__||
+'-----------------------------------------------------------------------------------------------------------------'\n`);
+
+    appendLine("Welcome to Hashir's Terminal Portfolio");
+    appendLine("Type 'help' to see available commands.\n");
+    newPrompt();
+  </script>
+</body>
+</html>
+
